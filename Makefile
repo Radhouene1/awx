@@ -635,6 +635,14 @@ awx-kube-build: Dockerfile
 		$(DOCKER_KUBE_CACHE_FLAG) \
 		-t $(IMAGE_KUBE) .
 
+# Replace invalid 'devel' with valid PEP440 dev version for setuptools
+ifeq ($(VERSION),devel)
+    VERSION := 0.0.0.dev0
+    SETUPTOOLS_SCM_PRETEND_VERSION := 0.0.0.dev0
+else
+    SETUPTOOLS_SCM_PRETEND_VERSION := $(VERSION)
+endif
+
 ## Build multi-arch awx image for deployment on Kubernetes environment.
 ## Remove SSH requirement from awx-kube-buildx
 #--ssh default=$(SSH_AUTH_SOCK)
