@@ -566,7 +566,8 @@ Dockerfile.dev: tools/ansible/roles/dockerfile/templates/Dockerfile.j2
 ## Build awx_devel image for docker compose development environment
 docker-compose-build: Dockerfile.dev
 	DOCKER_BUILDKIT=1 docker build \
-		--ssh default=$(SSH_AUTH_SOCK) \
+		## Remove SSH requirement from awx-kube-buildx
+		#--ssh default=$(SSH_AUTH_SOCK) \
 		-f Dockerfile.dev \
 		-t $(DEVEL_IMAGE_NAME) \
 		--build-arg BUILDKIT_INLINE_CACHE=1 \
@@ -639,7 +640,8 @@ awx-kube-buildx: Dockerfile
 	- docker buildx create --name awx-kube-buildx
 	docker buildx use awx-kube-buildx
 	- docker buildx build \
-		--ssh default=$(SSH_AUTH_SOCK) \
+		## Remove SSH requirement from awx-kube-buildx
+		#--ssh default=$(SSH_AUTH_SOCK) \
 		--push \
 		--build-arg VERSION=$(VERSION) \
 		--build-arg SETUPTOOLS_SCM_PRETEND_VERSION=$(VERSION) \
@@ -673,7 +675,8 @@ awx-kube-dev-buildx: Dockerfile.kube-dev
 	- docker buildx create --name awx-kube-dev-buildx
 	docker buildx use awx-kube-dev-buildx
 	- docker buildx build \
-		--ssh default=$(SSH_AUTH_SOCK) \
+		## Remove SSH requirement from awx-kube-buildx
+		#--ssh default=$(SSH_AUTH_SOCK) \
 		--push \
 		--build-arg BUILDKIT_INLINE_CACHE=1 \
 		$(DOCKER_KUBE_DEV_CACHE_FLAG) \
