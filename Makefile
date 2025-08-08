@@ -575,12 +575,12 @@ docker-compose-build: Dockerfile.dev
 
 .PHONY: docker-compose-buildx
 ## Build awx_devel image for docker compose development environment for multiple architectures
+## Remove SSH requirement from awx-kube-buildx
+#--ssh default=$(SSH_AUTH_SOCK)
 docker-compose-buildx: Dockerfile.dev
 	- docker buildx create --name docker-compose-buildx
 	docker buildx use docker-compose-buildx
 	- docker buildx build \
-		## Remove SSH requirement from awx-kube-buildx
-		#--ssh default=$(SSH_AUTH_SOCK) \
 		--push \
 		--build-arg BUILDKIT_INLINE_CACHE=1 \
 		$(DOCKER_DEVEL_CACHE_FLAG) \
@@ -636,12 +636,12 @@ awx-kube-build: Dockerfile
 		-t $(IMAGE_KUBE) .
 
 ## Build multi-arch awx image for deployment on Kubernetes environment.
+## Remove SSH requirement from awx-kube-buildx
+#--ssh default=$(SSH_AUTH_SOCK)
 awx-kube-buildx: Dockerfile
 	- docker buildx create --name awx-kube-buildx
 	docker buildx use awx-kube-buildx
 	- docker buildx build \
-		## Remove SSH requirement from awx-kube-buildx
-		#--ssh default=$(SSH_AUTH_SOCK) \
 		--push \
 		--build-arg VERSION=$(VERSION) \
 		--build-arg SETUPTOOLS_SCM_PRETEND_VERSION=$(VERSION) \
@@ -671,12 +671,13 @@ awx-kube-dev-build: Dockerfile.kube-dev
 	    -t $(IMAGE_KUBE_DEV) .
 
 ## Build and push multi-arch awx_kube_devel image for development on local Kubernetes environment.
+## Remove SSH requirement from awx-kube-buildx
+##--ssh default=$(SSH_AUTH_SOCK)
+
 awx-kube-dev-buildx: Dockerfile.kube-dev
 	- docker buildx create --name awx-kube-dev-buildx
 	docker buildx use awx-kube-dev-buildx
 	- docker buildx build \
-		## Remove SSH requirement from awx-kube-buildx
-		#--ssh default=$(SSH_AUTH_SOCK) \
 		--push \
 		--build-arg BUILDKIT_INLINE_CACHE=1 \
 		$(DOCKER_KUBE_DEV_CACHE_FLAG) \
