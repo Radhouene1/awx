@@ -92,6 +92,16 @@ I18N_FLAG_FILE = .i18n_built
 ## PLATFORMS defines the target platforms for  the manager image be build to provide support to multiple
 PLATFORMS ?= linux/amd64,linux/arm64  # linux/ppc64le,linux/s390x
 
+
+# Replace invalid 'devel' with valid PEP440 dev version for setuptools
+ifeq ($(VERSION),devel)
+    VERSION := 0.0.0.dev0
+    SETUPTOOLS_SCM_PRETEND_VERSION := 0.0.0.dev0
+else
+    SETUPTOOLS_SCM_PRETEND_VERSION := $(VERSION)
+endif
+
+
 # Set up cache variables for image builds, allowing to control whether cache is used or not, ex:
 # DOCKER_CACHE=--no-cache make docker-compose-build
 ifeq ($(DOCKER_CACHE),)
@@ -635,13 +645,6 @@ awx-kube-build: Dockerfile
 		$(DOCKER_KUBE_CACHE_FLAG) \
 		-t $(IMAGE_KUBE) .
 
-# Replace invalid 'devel' with valid PEP440 dev version for setuptools
-ifeq ($(VERSION),devel)
-    VERSION := 0.0.0.dev0
-    SETUPTOOLS_SCM_PRETEND_VERSION := 0.0.0.dev0
-else
-    SETUPTOOLS_SCM_PRETEND_VERSION := $(VERSION)
-endif
 
 ## Build multi-arch awx image for deployment on Kubernetes environment.
 ## Remove SSH requirement from awx-kube-buildx
