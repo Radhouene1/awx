@@ -1,9 +1,10 @@
 # minimal_awx_settings.py
-DEBUG = False
-SECRET_KEY = "fake-secret-key-for-build"
+# minimal_awx_settings.py
+SECRET_KEY = "dev"
+DEFAULTS_SNAPSHOT = {}
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": ":memory:",
+        "NAME": "/tmp/awx_dev.sqlite3",
     }
 }
