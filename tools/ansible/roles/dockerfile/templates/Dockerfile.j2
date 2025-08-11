@@ -100,14 +100,20 @@ RUN make sdist && /var/lib/awx/venv/awx/bin/pip install dist/awx.tar.gz
 #RUN DJANGO_SETTINGS_MODULE=awx.settings.defaults SKIP_SECRET_KEY_CHECK=yes SKIP_PG_VERSION_CHECK=yes /var/lib/awx/venv/awx/bin/awx-manage collectstatic --noinput --clear
 #{% endif %}
 {% if not headless|bool %}
+# Copy settings file into container
 COPY minimal_awx_settings.py /tmp/minimal_awx_settings.py
 
+# Optional: debug to verify file is there
+RUN ls -l /tmp/minimal_awx_settings.py && cat /tmp/minimal_awx_settings.py
+
+# Run collectstatic with the settings file
 RUN AWX_SETTINGS_FILE=/tmp/minimal_awx_settings.py \
     SKIP_PRODUCTION_CHECKS=1 \
     DJANGO_SETTINGS_MODULE=awx.settings.defaults \
     SKIP_SECRET_KEY_CHECK=yes \
     SKIP_PG_VERSION_CHECK=yes \
     /var/lib/awx/venv/awx/bin/awx-manage collectstatic --noinput --clear
+
 
 {% endif %}
 {% endif %}
