@@ -12,6 +12,14 @@ GIT_REPO_NAME ?= $(shell basename `git rev-parse --show-toplevel`)
 GIT_BRANCH ?= $(shell git rev-parse --abbrev-ref HEAD)
 MANAGEMENT_COMMAND ?= awx-manage
 VERSION ?= $(shell $(PYTHON) tools/scripts/scm_version.py 2> /dev/null)
+# Replace invalid 'devel' with valid PEP440 dev version for setuptools
+ifeq ($(VERSION),devel)
+    VERSION := 0.0.0.dev0
+    SETUPTOOLS_SCM_PRETEND_VERSION := 0.0.0.dev0
+else
+    SETUPTOOLS_SCM_PRETEND_VERSION := $(VERSION)
+endif
+
 
 # ansible-test requires semver compatable version, so we allow overrides to hack it
 COLLECTION_VERSION ?= $(shell $(PYTHON) tools/scripts/scm_version.py | cut -d . -f 1-3)
@@ -93,13 +101,7 @@ I18N_FLAG_FILE = .i18n_built
 PLATFORMS ?= linux/amd64,linux/arm64  # linux/ppc64le,linux/s390x
 
 
-# Replace invalid 'devel' with valid PEP440 dev version for setuptools
-ifeq ($(VERSION),devel)
-    VERSION := 0.0.0.dev0
-    SETUPTOOLS_SCM_PRETEND_VERSION := 0.0.0.dev0
-else
-    SETUPTOOLS_SCM_PRETEND_VERSION := $(VERSION)
-endif
+
 
 
 # Set up cache variables for image builds, allowing to control whether cache is used or not, ex:
