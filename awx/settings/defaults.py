@@ -9,6 +9,8 @@ import tempfile
 import socket
 from datetime import timedelta
 
+DEFAULTS_SNAPSHOT = {}
+
 DEBUG = True
 SQL_DEBUG = DEBUG
 
