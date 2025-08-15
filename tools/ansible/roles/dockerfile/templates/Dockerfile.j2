@@ -97,22 +97,7 @@ COPY --from=ui-builder /tmp/src/awx/ui/build /tmp/src/awx/ui/build
 RUN make sdist && /var/lib/awx/venv/awx/bin/pip install dist/awx.tar.gz
 
 {% if not headless|bool %}
-# RUN PYTHONPATH=/tmp/src DJANGO_SETTINGS_MODULE=awx.settings.defaults SKIP_SECRET_KEY_CHECK=yes SKIP_PG_VERSION_CHECK=yes /var/lib/awx/venv/awx/bin/awx-manage collectstatic --noinput --clear
-# Create minimal settings file
-RUN mkdir -p /etc/tower && \
-    echo "SECRET_KEY = 'ci-dummy-key'" > /etc/tower/settings.py && \
-    echo "ALLOWED_HOSTS = ['*']" >> /etc/tower/settings.py && \
-    echo "DEFAULTS_SNAPSHOT = {}" >> /etc/tower/settings.py && \
-    echo "IS_K8S = False" >> /etc/tower/settings.py
-
-# Run collectstatic with custom settings
-RUN AWX_SETTINGS_FILE=/etc/tower/settings.py \
-    DJANGO_SETTINGS_MODULE=awx.settings.defaults \
-    SKIP_SECRET_KEY_CHECK=yes \
-    SKIP_PG_VERSION_CHECK=yes \
-    /var/lib/awx/venv/awx/bin/awx-manage collectstatic --noinput --clear
-
-
+ RUN PYTHONPATH=/tmp/src DJANGO_SETTINGS_MODULE=awx.settings.defaults SKIP_SECRET_KEY_CHECK=yes SKIP_PG_VERSION_CHECK=yes /var/lib/awx/venv/awx/bin/awx-manage collectstatic --noinput --clear
 {% endif %}
 
 
