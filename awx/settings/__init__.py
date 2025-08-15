@@ -29,11 +29,11 @@ DYNACONF = factory(
 )
 
 # Store snapshot before loading any custom config file
-DYNACONF.set(
-    "DEFAULTS_SNAPSHOT",
-    copy.deepcopy(DYNACONF.as_dict(internal=False)),
-    loader_identifier="awx.settings:DEFAULTS_SNAPSHOT",
-)
+#DYNACONF.set(
+#    "DEFAULTS_SNAPSHOT",
+#    copy.deepcopy(DYNACONF.as_dict(internal=False)),
+#    loader_identifier="awx.settings:DEFAULTS_SNAPSHOT",
+#)
 
 #############################################################################################
 # Settings loaded before this point will be allowed to be overridden by the database settings
